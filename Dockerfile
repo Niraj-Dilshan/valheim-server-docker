@@ -97,6 +97,34 @@ COPY --from=i386-libs /lib/i386-linux-gnu /lib/i386-linux-gnu
 COPY --from=i386-libs /usr/lib/i386-linux-gnu /usr/lib/i386-linux-gnu
 COPY fake-supervisord /usr/bin/supervisord
 
+# Install deps
+RUN \
+dpkg --add-architecture armhf;\
+apt-get update && apt-get install -y curl libc6:armhf vim git cmake python3 gcc-arm-linux-gnueabihf;
+
+WORKDIR /root
+
+# Install box86
+RUN \
+git clone https://github.com/ptitSeb/box86 --branch v0.3.6;\
+cd box86;\
+mkdir build; cd build; cmake .. -DARM64=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo;\
+make -j$(nproc);\
+make install
+
+# Install box64
+RUN \
+git clone https://github.com/ptitSeb/box64 --branch v0.2.6;\
+cd box64;\
+mkdir build; cd build; cmake .. -DARM_DYNAREC=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo;\
+make -j$(nproc);\
+make install
+
+# Clean up build process
+RUN \
+rm -rf /root/box64 /root/box86;\
+apt-get autoremove --purge -y curl vim git cmake python3 gcc-arm-linux-gnueabihf 
+
 RUN groupadd -g "${PGID:-0}" -o valheim \
     && useradd -g "${PGID:-0}" -u "${PUID:-0}" -o --create-home valheim \
     && apt-get update \
