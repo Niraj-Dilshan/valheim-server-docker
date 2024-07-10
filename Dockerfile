@@ -70,9 +70,9 @@ RUN if [ "${TESTS:-true}" = true ]; then \
 WORKDIR /
 RUN rm -rf /usr/local/lib/
 RUN ls /build/supervisor/dist/
-RUN tar xzvf /build/supervisor/dist/supervisor-*.linux-x86_64.tar.gz
-RUN tar xzvf /build/env2cfg/dist/env2cfg-*.linux-x86_64.tar.gz
-RUN tar xzvf /build/python-a2s/dist/python-a2s-*.linux-x86_64.tar.gz
+RUN tar xzvf /build/supervisor/dist/supervisor-*.linux-aarch64.tar.gz
+RUN tar xzvf /build/env2cfg/dist/env2cfg-*.linux-aarch64.tar.gz
+RUN tar xzvf /build/python-a2s/dist/python-a2s-*.linux-aarch64.tar.gz
 COPY supervisord.conf /usr/local/etc/supervisord.conf
 RUN mkdir -p /usr/local/etc/supervisor/conf.d/ \
     && chmod 640 /usr/local/etc/supervisord.conf
